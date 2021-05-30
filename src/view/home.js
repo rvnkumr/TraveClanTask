@@ -51,14 +51,17 @@ const [toggle,settoggle]=useState(false)
 
         for(var i in res.data){
             if(res.data[i].bids&&res.data[i].bids.length){
-                res.data[i].amount= Math.max.apply(Math, res.data[i].bids.map(function(o) { return o.amount; }))
+                res.data[i].maxAmount= Math.max.apply(Math, res.data[i].bids.map(function(o) { return o.amount; }))
+                res.data[i].minAmount= Math.min.apply(Math, res.data[i].bids.map(function(o) { return o.amount; }))
             }
              else{
-            res.data[i].amount=0 
+            res.data[i].maxAmount=0 ;
+            res.data[i].minAmount=0 ;
+
                   }
         }
         let sortedData=res.data.sort((a, b) => {
-            return b.amount-a.amount;
+            return b.maxAmount-a.maxAmount;
         });
         
 
@@ -69,33 +72,16 @@ const [toggle,settoggle]=useState(false)
         })
     }, [])
 
-    const getMaxPrimium=(bids)=>{
-        if(bids&&bids.length){
-            return Math.max.apply(Math,bids.map(function(o) { return o.amount; }))
-        }
-        else{
-            return 0
-        }
-    }
 
     const toggleSort =()=>{
-        if(flag){
-            let sortedData=merchantDetail.sort((a, b) => {
-                return b.amount-a.amount;
-                setMerchantDetails(sortedData)
-            });
-        }
-        else{
-            let sortedData=merchantDetail.sort((a, b) => {
-                return a.amount-b.amount;
-                setMerchantDetails(sortedData)
-            });
-        }
-        
          setFlag(!flag)
-         settoggle(!toggle)
+         settoggle(!toggle)      
+    }
+    const redirectToBid=(id)=>{
+        let bidsDetail=merchantDetail.filter((item)=>item.id==id)
+        localStorage.setItem('bidsDetail',JSON.stringify(bidsDetail) );
+        window.location.assign('/bidsDetails:'+id)
 
-            
     }
 
     return (
@@ -111,19 +97,19 @@ const [toggle,settoggle]=useState(false)
                             <TableCell >Email</TableCell>
                             <TableCell >Phone</TableCell>
                             <TableCell >Primium</TableCell>
-                            <TableCell ><div onClick={toggleSort}>{flag ?"Min bid":"Max bids"} <span> ({toggle ?" Click here for Max bid ":"Click here for Min bid"})</span></div></TableCell>
+                            <TableCell ><div style={{cursor:"pointer"}}onClick={toggleSort}>{flag ?"Max bid":"Min bids"} <span> ({toggle ?" Click here for Max bid ":"Click here for Min bid"})</span></div></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                     
                         {merchantDetail?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index)=>{
                         return (
-                            <TableRow key={item.id}>
+                            <TableRow key={item.id} onClick={e=>{redirectToBid(item.id)}} style={{cursor:"pointer"}}>
                                 <TableCell>{item.firstname+ ' '+ item.lastname}</TableCell>
                                 <TableCell>{item.email}</TableCell>
                                 <TableCell>{item.phone}</TableCell>
                                 <TableCell>{item.hasPremium?"YES":"NO"}</TableCell>
-                                <TableCell>{item.amount}</TableCell>
+                                <TableCell>{flag?item.maxAmount:item.minAmount}</TableCell>
                             </TableRow>
                         );
                     })}
