@@ -77,12 +77,7 @@ const [toggle,settoggle]=useState(false)
          setFlag(!flag)
          settoggle(!toggle)      
     }
-    const redirectToBid=(id)=>{
-        let bidsDetail=merchantDetail.filter((item)=>item.id==id)
-        localStorage.setItem('bidsDetail',JSON.stringify(bidsDetail) );
-        window.location.assign('/bidsDetails:'+id)
-
-    }
+    
 
     return (
         <TableContainer component={Paper} style={{ margin: "20px" }}>
@@ -104,7 +99,7 @@ const [toggle,settoggle]=useState(false)
                     
                         {merchantDetail?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index)=>{
                         return (
-                            <TableRow key={item.id} onClick={e=>{redirectToBid(item.id)}} style={{cursor:"pointer"}}>
+                            <TableRow key={item.id} >
                                 <TableCell>{item.firstname+ ' '+ item.lastname}</TableCell>
                                 <TableCell>{item.email}</TableCell>
                                 <TableCell>{item.phone}</TableCell>
