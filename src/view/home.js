@@ -1,6 +1,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
+import Avatar from 'react-avatar';
 import {
     Box,
     Card,
@@ -88,7 +89,7 @@ const [toggle,settoggle]=useState(false)
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell >Name</TableCell>
+                            <TableCell >Name (with avtar)</TableCell>
                             <TableCell >Email</TableCell>
                             <TableCell >Phone</TableCell>
                             <TableCell >Primium</TableCell>
@@ -100,7 +101,9 @@ const [toggle,settoggle]=useState(false)
                         {merchantDetail?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index)=>{
                         return (
                             <TableRow key={item.id} >
-                                <TableCell>{item.firstname+ ' '+ item.lastname}</TableCell>
+                                <TableCell>{item.firstname+ ' '+ item.lastname + '  '}
+                                <Avatar size="30" src={item.avatarUrl}/>
+                                </TableCell>
                                 <TableCell>{item.email}</TableCell>
                                 <TableCell>{item.phone}</TableCell>
                                 <TableCell>{item.hasPremium?"YES":"NO"}</TableCell>
